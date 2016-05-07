@@ -38,6 +38,9 @@
 
     // executeURLS();
 
+    /**
+     * startParser - start the parser
+     */
     function startParser() {
 
         for(var i = 0; i < numeroDePaginas; i++) {
@@ -84,6 +87,10 @@
         }
     }
 
+
+    /**
+     * executeURLS - get URLs from a search to parse
+     */
     function executeURLS() {
 
         for(var i = 0, len = documentsURL.length; i < len; i++) {
@@ -104,17 +111,25 @@
         }
     }
 
+    /**
+     * parseDocument - description
+     *
+     * @param  {String} htmlString - the html page
+     * @param  {Array} documentsURL
+     * @param  {Boolean} endChecker
+     */
     function parseDocument(htmlString, documentsURL, endChecker) {
 
         var $ = cheerio.load(htmlString),
 
             result = {},
             label, value, url,
-            subitem, subitemFields,
+            subitem, subitemFields, cabecalho, subitemsCabecalhoFields,
             relatedDocument, relatedDocumentFields,
 
             fields = $('.rotulo'),
             subitems = $('.subtabela').find('tr').not('.cabecalho'),
+            subitemsCabecalho = $('.subtabela').find('tr.cabecalho'),
             relatedDocuments = $('table').last().find('tr').not('.titulo').not('.cabecalho');
 
         results.url = documentsURL;
@@ -302,53 +317,9 @@
             }
         }
 
-        result.subitems = [];
-
-        // subitems
-        for(var i = 0, len = subitems.length; i < len; i++) {
-
-            subitemFields = $(subitems[i]).find('td');
-            subitem = {};
-
-            for(var j = 0; j < 5; j++) {
-
-                value = $(subitemFields[j]).text();
-                value = JSON.stringify(value).replace(/(?:\\r\\n|\\r|\\n|\\t|")/g, '').trim();
-
-                switch (j) {
-                    // Subitem da Despesa
-                    case 0:
-                        subitem.codigo = value.substring(0, value.indexOf(' '));
-                        subitem.rotulo = value.substring(value.indexOf('-') + 2, value.length);
-                    break;
-
-                    // Quantidade
-                    case 1:
-                        subitem.quantidade = value;
-                    break;
-
-                    // Valor Unitário (R$)
-                    case 2:
-                        subitem.valorUnitario = value;
-                    break;
-
-                    // Valor Total (R$)
-                    case 3:
-                        subitem.valorTotal = value;
-                    break;
-
-                    // Descrição
-                    case 4:
-                        subitem.descricao = value;
-                    break;
-
-                    default:
-
-                }
-            }
-
-            result.subitems.push(subitem);
-        }
+        /*
+         DOCUMENTOS RELACIONADOS
+         ================================================================== */
 
         result.documentosRelacionados = [];
 
@@ -358,51 +329,115 @@
             relatedDocumentFields = $(relatedDocuments[i]).find('td');
             relatedDocument = {};
 
-            for(var j = 0; j < 10; j++) {
+            if(relatedDocumentFields.length === 10) {
 
-                value = $(relatedDocumentFields[j]).text();
-                value = JSON.stringify(value).replace(/(?:\\r\\n|\\r|\\n|\\t|")/g, '').trim();
+                for(var j = 0; j < 10; j++) {
 
-                if(j === 2) {
-                    url = $(relatedDocumentFields[j]).find('a').prop('href');
+                    value = $(relatedDocumentFields[j]).text();
+                    value = JSON.stringify(value).replace(/(?:\\r\\n|\\r|\\n|\\t|")/g, '').trim();
+
+                    if(j === 2) {
+                        url = $(relatedDocumentFields[j]).find('a').attr('href');
+                    }
+
+                    switch (j) {
+                        // Data
+                        case 0:
+                            relatedDocument.data = value;
+                        break;
+
+                        // Fase
+                        case 1:
+                            relatedDocument.fase = value;
+                        break;
+
+                        // Documento
+                        case 2:
+                            relatedDocument.documento = value;
+                            relatedDocument.caminho = url;
+                            relatedDocument.instancia = url.substring(url.indexOf('=') + 1, url.length);
+                        break;
+
+                        // Especie
+                        case 3:
+                            relatedDocument.especie = value;
+                        break;
+
+                        // Valor
+                        case 9:
+                            relatedDocument.valor = value;
+                        break;
+
+                        default:
+
+                    }
                 }
 
-                switch (j) {
-                    // Data
-                    case 0:
-                        relatedDocument.data = value;
-                    break;
+                result.documentosRelacionados.push(relatedDocument);
+            }
+        }
 
-                    // Fase
-                    case 1:
-                        relatedDocument.fase = value;
-                    break;
+        /*
+         SUBITEMS
+         ================================================================== */
 
-                    // Documento
-                    case 2:
-                        relatedDocument.documento = value;
-                        relatedDocument.caminho = url;
-                    break;
+        result.subitems = [];
 
-                    // Especie
-                    case 3:
-                        relatedDocument.especie = value;
-                    break;
+        // subitems
+        for(var i = 0, len = subitems.length; i < len; i++) {
 
-                    // Valor
-                    case 9:
-                        relatedDocument.valor = value;
-                    break;
+            subitemsCabecalhoFields = $(subitemsCabecalho).find('th');
+            subitemFields = $(subitems[i]).find('td');
+            subitem = {};
 
-                    default:
+            for(var j = 0; j < subitemsCabecalhoFields.length; j++) {
 
+                cabecalho = $(subitemsCabecalhoFields[j]).text();
+                value = $(subitemFields[j]).text();
+                value = JSON.stringify(value).replace(/(?:\\r\\n|\\r|\\n|\\t|")/g, '').trim();
+
+                if(cabecalho.indexOf('Subitem da Despesa') >= 0) {
+                    subitem.codigo = value.substring(0, value.indexOf(' '));
+                    subitem.rotulo = value.substring(value.indexOf('-') + 2, value.length);
+                }
+                else if(cabecalho.indexOf('Quantidade') >= 0) {
+                    subitem.quantidade = value;
+                }
+                else if(cabecalho.indexOf('Valor Unitário') >= 0) {
+                    subitem.valorUnitario = value;
+                }
+                else if(cabecalho.indexOf('Valor Total') >= 0) {
+                    subitem.valorTotal = value;
+                }
+                else if(cabecalho.indexOf('Descrição') >= 0) {
+                    subitem.descricao = value;
+                }
+                else if(cabecalho.indexOf('Empenho') >= 0) {
+                    subitem.documento = value;
+
+                    for(var k = 0, klen = result.documentosRelacionados.length; k < klen; k++) {
+                        if(value === result.documentosRelacionados[k].documento) {
+                            subitem.instancia = result.documentosRelacionados[k].instancia;
+                        }
+                    }
+                }
+                else if(cabecalho.indexOf('Valor') >= 0 && cabecalho.indexOf('Valor Total') < 0 && cabecalho.indexOf('Valor Unitário') < 0) {
+                    subitem.valor = value;
                 }
             }
 
-            result.documentosRelacionados.push(relatedDocument);
+            if(!subitem.documento){
+                result.subitems.push(subitem);
+            }
+            else if(subitem.documento.indexOf('Não há detalhamento para este documento.') < 0) {
+                result.subitems.push(subitem);
+            }
+
         }
 
-        // console.log(JSON.stringify(result));
+        /*
+         INSERE DOCUMENTO
+         ================================================================== */
 
         if(result.documento) {
             results.push(result);
@@ -416,6 +451,10 @@
         }
     }
 
+
+    /**
+     * writeResultFile - write the result in a json file
+     */
     function writeResultFile() {
         fs.writeFile(arquivoSaida, JSON.stringify(results), function (err) {
             if (err) return console.log(err);
