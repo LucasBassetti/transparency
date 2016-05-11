@@ -13,7 +13,9 @@
             empenho: base_uri + 'empenho/',
             itemDespesa: base_uri + 'item-despesa/',
             liquidacao: base_uri + 'liquidacao/',
+            itemLiquidacao: base_uri + 'item-liquidacao/',
             pagamento: base_uri + 'pagamento/',
+            itemPagamento: base_uri + 'item-pagamento/',
 
             orgao: base_uri + 'orgao/',
             unidadeOrcamentaria: base_uri + 'unidade-orcamentaria/',
@@ -88,6 +90,8 @@
 
             itemDespesa,
             itemDespesaURI,
+            itemLiquidacaoURI,
+            itemPagamentoURI,
             categoriaEconomicaURI,
             grupoDespesaURI,
             modalidadeAplicacaoURI,
@@ -354,7 +358,7 @@
 
                 if(doc.fase === 'Empenho') {
 
-                    itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento '/' + i;
+                    itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
                     categoriaEconomicaURI = uri.categoriaEconomica  + date.getFullYear() + '/' + doc.classificacaoEconomica.codigo;
                     grupoDespesaURI = uri.grupoDespesa  + date.getFullYear() + '/' + doc.grupoDespesa.codigo;
                     modalidadeAplicacaoURI = uri.modalidadeAplicacao  + date.getFullYear() + '/' + doc.modalidadeAplicacao.codigo;
@@ -393,7 +397,7 @@
                     addTriple({
                         subject: itemDespesaURI,
                         predicate: prefix.loa + 'valorTotal',
-                        object: itemDespesa.valorTotal.replace
+                        object: itemDespesa.valorTotal.replace('R$ ', '')
                     }, 'Literal');
 
                     // uri:itemDespesa rdfs:comment "descricao"
@@ -561,26 +565,68 @@
                     }, 'Literal');
                 }
 
-                else if(doc.fase === 'Liquidaçao') {
+                else if(doc.fase === 'Liquidação') {
 
-                    // itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + itemDespesa.codigo + '/' + itemDespesa.instancia;
+                    itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
                     subelementoDespesaURI = uri.subelementoDespesa  + date.getFullYear() + '/' + itemDespesa.codigo;
 
-                    // uri:liquidacao loa:liquida uri:itemDespesa
+                    // uri:itemLiquidacao rdf:type loa:ItemLiquidacao
+                    addTriple({
+                        subject: itemLiquidacaoURI,
+                        predicate: prefix.rdf + 'type',
+                        object: prefix.loa + 'ItemLiquidacao'
+                    }, 'URI');
+
+                    // uri:liquidacao loa:compostoDe uri:itemLiquidacao
                     addTriple({
                         subject: subject,
+                        predicate: prefix.loa + 'compostoDe',
+                        object: itemLiquidacaoURI
+                    }, 'URI');
+
+                    // uri:itemLiquidacao rdf:label "rotulo"
+                    addTriple({
+                        subject: itemLiquidacaoURI,
+                        predicate: prefix.rdfs + 'label',
+                        object: "ITEM LIQUIDACAO " + itemDespesa.rotulo
+                    }, 'Literal');
+
+                    // uri:itemLiquidacaoURI loa:liquida uri:subelementoDespesa
+                    addTriple({
+                        subject: itemLiquidacaoURI,
                         predicate: prefix.loa + 'liquida',
                         object: subelementoDespesaURI
                     }, 'URI');
                 }
                 else if(doc.fase === 'Pagamento') {
 
-                    // itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + itemDespesa.codigo + '/' + itemDespesa.instancia;
+                    itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
                     subelementoDespesaURI = uri.subelementoDespesa  + date.getFullYear() + '/' + itemDespesa.codigo;
 
-                    // uri:pagamento loa:paga uri:itemDespesa
+                    // uri:itemPagamento rdf:type loa:ItemPagamento
+                    addTriple({
+                        subject: itemPagamentoURI,
+                        predicate: prefix.rdf + 'type',
+                        object: prefix.loa + 'ItemPagamento'
+                    }, 'URI');
+
+                    // uri:pagamento loa:compostoDe uri:itemPagamento
                     addTriple({
                         subject: subject,
+                        predicate: prefix.loa + 'compostoDe',
+                        object: itemPagamentoURI
+                    }, 'URI');
+
+                    // uri:itemPagamento rdf:label "rotulo"
+                    addTriple({
+                        subject: itemPagamentoURI,
+                        predicate: prefix.rdfs + 'label',
+                        object: "ITEM PAGAMENTO " + itemDespesa.rotulo
+                    }, 'Literal');
+
+                    // uri:pagamento loa:paga uri:subelementoDespesa
+                    addTriple({
+                        subject: itemPagamentoURI,
                         predicate: prefix.loa + 'paga',
                         object: subelementoDespesaURI
                     }, 'URI');
