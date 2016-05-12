@@ -355,15 +355,15 @@
             for(var j = 0, slen = doc.subitems.length; j < slen; j++) {
 
                 itemDespesa = doc.subitems[j];
+                subelementoDespesaURI = uri.subelementoDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo;
 
                 if(doc.fase === 'Empenho') {
 
-                    itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
+                    itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
                     categoriaEconomicaURI = uri.categoriaEconomica  + date.getFullYear() + '/' + doc.classificacaoEconomica.codigo;
                     grupoDespesaURI = uri.grupoDespesa  + date.getFullYear() + '/' + doc.grupoDespesa.codigo;
                     modalidadeAplicacaoURI = uri.modalidadeAplicacao  + date.getFullYear() + '/' + doc.modalidadeAplicacao.codigo;
                     elementoDespesaURI = uri.elementoDespesa  + date.getFullYear() + '/' + doc.elementoDespesa.codigo;
-                    subelementoDespesaURI = uri.subelementoDespesa  + date.getFullYear() + '/' + itemDespesa.codigo;
 
                     // uri:empenho loa:compostoDe uri:itemDespesa
                     addTriple({
@@ -567,8 +567,7 @@
 
                 else if(doc.fase === 'Liquidação') {
 
-                    itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
-                    subelementoDespesaURI = uri.subelementoDespesa  + date.getFullYear() + '/' + itemDespesa.codigo;
+                    itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
 
                     // uri:itemLiquidacao rdf:type loa:ItemLiquidacao
                     addTriple({
@@ -600,8 +599,7 @@
                 }
                 else if(doc.fase === 'Pagamento') {
 
-                    itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
-                    subelementoDespesaURI = uri.subelementoDespesa  + date.getFullYear() + '/' + itemDespesa.codigo;
+                    itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
 
                     // uri:itemPagamento rdf:type loa:ItemPagamento
                     addTriple({
