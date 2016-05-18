@@ -10,9 +10,9 @@ config.query = {
     codigoED: 'TOD',                // Código Elemento Despesa
     codigoFavorecido: '',           // Código Favorecido
     numeroDePaginas: 1,             // Número de Páginas
-    offset: 5,                      // Offset
+    offset: 25,                      // Offset
 }
 
-config.query.arquivoSaida = 'files/pagamentos/pagUFES_Jan2016_0' + config.query.offset + '.json'  // ArquivoSaida
+config.query.arquivoSaida = 'files/pagamentos/pagUFES_Jan2016_' + config.query.offset + '.json'  // ArquivoSaida
 
 module.exports = config;

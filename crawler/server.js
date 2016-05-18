@@ -354,8 +354,10 @@
                         // Documento
                         case 2:
                             relatedDocument.documento = value;
-                            relatedDocument.caminho = url;
-                            relatedDocument.instancia = url.substring(url.indexOf('=') + 1, url.length);
+                            if(url) {
+                                relatedDocument.caminho = url;
+                                relatedDocument.instancia = url.substring(url.indexOf('=') + 1, url.length);
+                            }
                         break;
 
                         // Especie

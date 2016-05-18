@@ -53,7 +53,7 @@
     conn.setCredentials("admin", "admin");
 
     // triplify empenhos
-    for(var i = 0; i < 6; i++) {
+    for(var i = 0; i <= 24; i++) {
 
         if(i < 10) {
             docNumber = "0" + i;
@@ -62,8 +62,38 @@
             docNumber = i;
         }
 
-        // docPath = './files/empenhos/empUFES_Jan2016_' + docNumber + '.json';
-        // docPath = './files/liquidacoes/liqUFES_Jan2016_' + docNumber + '.json';
+        docPath = './files/empenhos/empUFES_Jan2016_' + docNumber + '.json';
+
+        documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
+        triplifyData(documents);
+    }
+
+    // triplify liquidacoes
+    for(var i = 0; i <= 21; i++) {
+
+        if(i < 10) {
+            docNumber = "0" + i;
+        }
+        else {
+            docNumber = i;
+        }
+
+        docPath = './files/liquidacoes/liqUFES_Jan2016_' + docNumber + '.json';
+
+        documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
+        triplifyData(documents);
+    }
+
+    // triplify pagamentos
+    for(var i = 0; i <= 25; i++) {
+
+        if(i < 10) {
+            docNumber = "0" + i;
+        }
+        else {
+            docNumber = i;
+        }
+
         docPath = './files/pagamentos/pagUFES_Jan2016_' + docNumber + '.json';
 
         documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
@@ -298,7 +328,7 @@
                 addTriple({
                     subject: subject,
                     predicate: prefix.rdf + 'type', // rdf:type
-                    object: prefix.loa + 'Liquidação'  // loa:Empenho
+                    object: prefix.loa + 'Liquidacao'  // loa:Empenho
                 }, 'URI');
 
                 if(credorURI.length > 0) {
@@ -742,7 +772,7 @@
                          addTriple({
                              subject: docRelacionadoURI,
                              predicate: prefix.rdf + "type",
-                             object: prefix.loa + "Liquidação"
+                             object: prefix.loa + "Liquidacao"
                          }, 'URI');
 
                          // uri:liquidacao loa:depende uri:empenho
