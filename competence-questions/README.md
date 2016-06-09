@@ -1,6 +1,6 @@
 ##### Quantos Empenhos cujo valor total ainda não foi totalmente Pago?
 
-<pre><code>
+``` sql
 SELECT (count(?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
        loa:valorTotal ?valorTotalEmpenhado .
@@ -10,11 +10,11 @@ SELECT (count(?empenho) as ?nEmpenhos) WHERE {
 
 	FILTER(xsd:double(?valorTotalEmpenhado) > xsd:double(?valorTotalPago))
 }
-</code></pre>
+```
 
 ##### Quantos Empenhos cujo valor total já foi totalmente Pago?
 
-<pre><code>
+``` sql
 SELECT (count(?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
        loa:valorTotal ?valorTotalEmpenhado .
@@ -24,11 +24,11 @@ SELECT (count(?empenho) as ?nEmpenhos) WHERE {
 
 	FILTER(xsd:double(?valorTotalEmpenhado) = xsd:double(?valorTotalPago))
 }
-</code></pre>
+```
 
 ##### Qual Credor teve maior número de Empenhos?
 
-<pre><code>
+``` sql
 SELECT ?nome (count(?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
        loa:favorece ?credor .
@@ -36,11 +36,11 @@ SELECT ?nome (count(?empenho) as ?nEmpenhos) WHERE {
 }
 GROUP BY (?nome)
 ORDER BY DESC(?nEmpenhos)
-</code></pre>
+```
 
 ##### Qual Credor recebeu mais dinheiro?
 
-<pre><code>
+``` sql
 SELECT ?nome (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
   ?empenho a loa:Empenho ;
        loa:valorTotal ?valorTotal ;
@@ -49,11 +49,11 @@ SELECT ?nome (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
 }
 GROUP BY (?nome)
 ORDER BY DESC(?sumValorTotal)
-</code></pre>
+```
 
 ##### Qual o Credor com a maior quantidade de Empenhos não Pagos?
 
-<pre><code>
+``` sql
 SELECT ?nome (count(distinct ?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
        	   loa:favorece ?credor .
@@ -63,11 +63,11 @@ SELECT ?nome (count(distinct ?empenho) as ?nEmpenhos) WHERE {
 }
 GROUP BY (?nome)
 ORDER BY DESC(?nEmpenhos)
-</code></pre>
+```
 
 ##### Qual foi o maior Pagamento realizado?
 
-<pre><code>
+``` sql
 SELECT ?pagamento (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
   ?pagamentoURI a loa:Pagamento ;
        loa:valorTotal ?valorTotal ;
@@ -75,11 +75,11 @@ SELECT ?pagamento (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
 }
 GROUP BY (?pagamento)
 ORDER BY DESC(?sumValorTotal)
-</code></pre>
+```
 
 ##### Qual o Subelemento de Despesa com maior número de Empenhos?
 
-<pre><code>
+``` sql
 SELECT ?subelementoLabel (count(?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
            loa:compostoDe ?itemDespesa .
@@ -89,11 +89,11 @@ SELECT ?subelementoLabel (count(?empenho) as ?nEmpenhos) WHERE {
 }
 GROUP BY (?subelementoLabel)
 ORDER BY DESC(?nEmpenhos)
-</code></pre>
+```
 
 ##### Qual o Elemento de Despesa com maior número de Empenhos?
 
-<pre><code>
+``` sql
 SELECT ?elementoLabel (count(?empenho) as ?nEmpenhos) WHERE {
   ?empenho a loa:Empenho ;
            loa:compostoDe ?itemDespesa .
@@ -103,11 +103,11 @@ SELECT ?elementoLabel (count(?empenho) as ?nEmpenhos) WHERE {
 }
 GROUP BY (?elementoLabel)
 ORDER BY DESC(?nEmpenhos)
-</code></pre>
+```
 
 ##### Qual Subelemento de Despesa com maior valor empenhado?
 
-<pre><code>
+``` sql
 SELECT ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
   ?empenho a loa:Empenho ;
              loa:valorTotal ?valorTotal ;
@@ -118,11 +118,11 @@ SELECT ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE 
 }
 GROUP BY (?subelementoLabel)
 ORDER BY DESC(?sumValorTotal)
-</code></pre>
+```
 
 ##### Qual Subelemento de Despesa com maior valor pago?
 
-<pre><code>
+``` sql
 SELECT ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
   ?pagamengo a loa:Pagamento ;
              loa:valorTotal ?valorTotal ;
@@ -133,11 +133,11 @@ SELECT ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE 
 }
 GROUP BY (?subelementoLabel)
 ORDER BY DESC(?sumValorTotal)
-</code></pre>
+```
 
 ##### Qual Item de Despesa com maior valor empenhado?
 
-<pre><code>
+``` sql
 SELECT ?nomeItem ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
   ?empenho a loa:Empenho ;
              loa:compostoDe ?itemDespesa .
@@ -149,4 +149,4 @@ SELECT ?nomeItem ?subelementoLabel (SUM(xsd:double(?valorTotal)) as ?sumValorTot
 }
 GROUP BY (?nomeItem)(?subelementoLabel)
 ORDER BY DESC(?sumValorTotal)
-</code></pre>
+```
