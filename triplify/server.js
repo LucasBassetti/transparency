@@ -19,7 +19,7 @@
 
             orgao: base_uri + 'orgao/',
             unidadeOrcamentaria: base_uri + 'unidade-orcamentaria/',
-            unidadeGestora: base_uri + 'unidade-gestora',
+            unidadeGestora: base_uri + 'unidade-gestora/',
             credor: base_uri + 'credor/',
 
             fonteRecurso: base_uri + 'fonte-recurso/',
@@ -159,11 +159,11 @@
             // Empenho - http://localhost:3000/loa/empenho/2016/{{codigo}}
             if(doc.fase === 'Empenho') {
 
-                funcaoURI = uri.funcao + '/' + date.getFullYear() + '/' + doc.funcao.codigo;
-                subfuncaoURI = uri.subfuncao + '/' + date.getFullYear() + '/' + doc.subfuncao.codigo;
-                programaURI = uri.programa + '/' + date.getFullYear() + '/' + doc.programa.codigo;
-                acaoURI = uri.acao + '/' + date.getFullYear() + '/' + doc.acao.codigo;
-                subtituloURI = uri.subtitulo + '/' + date.getFullYear() + '/' + doc.subtitulo.codigo;
+                funcaoURI = uri.funcao + date.getFullYear() + '/' + doc.funcao.codigo;
+                subfuncaoURI = uri.subfuncao + date.getFullYear() + '/' + doc.subfuncao.codigo;
+                programaURI = uri.programa + date.getFullYear() + '/' + doc.programa.codigo;
+                acaoURI = uri.acao + date.getFullYear() + '/' + doc.acao.codigo;
+                subtituloURI = uri.subtitulo + date.getFullYear() + '/' + doc.subtitulo.codigo;
 
                 // uri:empenho rdf:type loa:Empenho
                 addTriple({
@@ -453,11 +453,11 @@
                         object: prefix.loa + 'CategoriaEconomica'
                     }, 'URI');
 
-                    // uri:categoriaEconomica rdfs:subClassOf loa:ItemDepesa
+                    // uri:categoriaEconomica rdfs:subClassOf loa:ItemDespesa
                     addTriple({
                         subject: categoriaEconomicaURI,
                         predicate: prefix.rdfs + 'subClassOf',
-                        object: prefix.loa + 'ItemDepesa'
+                        object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
                     // uri:categoriaEconomica rdfs:label "rotulo"
@@ -490,11 +490,11 @@
                         object: categoriaEconomicaURI
                     }, 'URI');
 
-                    // uri:grupoDespesa rdfs:subClassOf loa:ItemDepesa
+                    // uri:grupoDespesa rdfs:subClassOf loa:ItemDespesa
                     addTriple({
                         subject: grupoDespesaURI,
                         predicate: prefix.rdfs + 'subClassOf',
-                        object: prefix.loa + 'ItemDepesa'
+                        object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
                     // uri:grupoDespesa rdfs:label "rotulo"
@@ -520,11 +520,11 @@
                         object: prefix.loa + 'ModalidadeAplicacao'
                     }, 'URI');
 
-                    // uri:modalidadeAplicacao rdfs:subClassOf loa:ItemDepesa
+                    // uri:modalidadeAplicacao rdfs:subClassOf loa:ItemDespesa
                     addTriple({
                         subject: modalidadeAplicacaoURI,
                         predicate: prefix.rdfs + 'subClassOf',
-                        object: prefix.loa + 'ItemDepesa'
+                        object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
                     // uri:modalidadeAplicacao rdfs:label "rotulo"
@@ -550,11 +550,11 @@
                         object: prefix.loa + 'ElementoDespesa'
                     }, 'URI');
 
-                    // uri:elementoDespesaURI rdfs:subClassOf loa:ItemDepesa
+                    // uri:elementoDespesaURI rdfs:subClassOf loa:ItemDespesa
                     addTriple({
                         subject: elementoDespesaURI,
                         predicate: prefix.rdfs + 'subClassOf',
-                        object: prefix.loa + 'ItemDepesa'
+                        object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
                     // uri:subelementoDespesa rdfs:label "rotulo"
@@ -580,11 +580,11 @@
                         object: prefix.loa + 'SubelementoDespesa'
                     }, 'URI');
 
-                    // uri:subelementoDespesa rdfs:subClassOf loa:ItemDepesa
+                    // uri:subelementoDespesa rdfs:subClassOf loa:ItemDespesa
                     addTriple({
                         subject: subelementoDespesaURI,
                         predicate: prefix.rdfs + 'subClassOf',
-                        object: prefix.loa + 'ItemDepesa'
+                        object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
                     // uri:subelementoDespesa rdfs:label "rotulo"
