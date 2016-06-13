@@ -1,0 +1,27 @@
+# == IMPORT ==
+
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-all.ttl --format r2rml
+
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa.ttl --format r2rml
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-credor.ttl --format r2rml
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-itemdespesa.ttl --format r2rml
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-empenho.ttl --format r2rml
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-liquidacao.ttl --format r2rml
+./stardog-admin virtual import dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/loa.properties /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/mapping-loa-pagamento.ttl --format r2rml
+
+
+Total: 6.062.674 triplas
+
+# == EXPORT ==
+
+./stardog data export dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/export/dpes.rdf
+./stardog data export dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/export/dpes.ttl --format NTRIPLES
+
+# === IMPORT ==
+
+./stardog data add dpes /Users/lucas/Documents/Mestrado/repositories/Dados/Mapeamentos/export/dpes.rdf
+
+# NAMESPACES
+
+time=http://www.w3.org/2006/time#
+loa=http://ontology.com.br/loa/spec/#

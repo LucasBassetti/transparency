@@ -42,7 +42,7 @@ ORDER BY DESC(?nEmpenhos)
 
 ``` sql
 SELECT ?nome (SUM(xsd:double(?valorTotal)) as ?sumValorTotal) WHERE {
-  ?empenho a loa:Empenho ;
+  ?pagamento a loa:Pagamento ;
        loa:valorTotal ?valorTotal ;
        loa:favorece ?credor .
   ?credor rdfs:label ?nome .

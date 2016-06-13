@@ -1,0 +1,921 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loa: <http://ontology.com.br/loa/spec/#> .
+@base <http://localhost:3000/base/> .
+
+# === ORGAO ===
+
+<OrgaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborgao2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/orgao/{\"numAnoExercicio\"}/{\"numCodigoOrgao\"}" ;
+        rr:class 		loa:Orgao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeOrgao\"" ]
+    ].
+
+# === UNIDADE GESTORA ===
+
+<UnidadeGestoraTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbunidadegestora2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/unidade-gestora/{\"numAnoExercicio\"}/{\"numCodigoUnidadeGestora\"}" ;
+        rr:class 		loa:UnidadeGestora ;
+        rr:class 		loa:UnidadeOrcamentaria ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeUnidadeGestora\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+    	rr:predicate rdfs:subClassOf ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <OrgaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"numCodigoOrgao\"" ;
+            	rr:parent "\"numCodigoOrgao\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	].
+
+# === PROGRAMA ===
+
+<ProgramaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentoprogramasiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/programa/{\"numAnoExercicio\"}/{\"numCodigoPrograma\"}" ;
+        rr:class 		loa:Programa ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomePrograma\"" ]
+    ].
+    
+# === ACAO ===
+
+<AcaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentoacaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/acao/{\"numAnoExercicio\"}/{\"numCodigoAcao\"}" ;
+        rr:class 		loa:Acao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeAcao\"" ]
+    ].
+    
+# === SUBTITULO ===
+
+<SubtituloTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbsubtitulo2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subtitulo/{\"numAnoExercicio\"}/{\"numSubtitulo\"}" ;
+        rr:class 		loa:Subtitulo ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strSubtitulo\"" ]
+    ].
+    
+# === FUNCAO ===
+
+<FuncaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentofuncaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/funcao/{\"numAnoExercicio\"}/{\"numCodigoFuncao\"}" ;
+        rr:class 		loa:Funcao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeFuncao\"" ]
+    ].
+    
+# === SUBFUNCAO ===
+
+<SubfuncaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentosubfuncaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subfuncao/{\"numAnoExercicio\"}/{\"numCodigoSubFuncao\"}" ;
+        rr:class 		loa:Subfuncao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeSubFuncao\"" ]
+    ].
+
+# === FONTE DE RECURSO ===
+
+<FonteRecursoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbfontederecurso2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/fonte-recurso/{\"numFonteRecurso\"}" ;
+        rr:class 		loa:FonteRecurso ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strFonteRecurso\"" ]
+    ].
+
+# === CATEGORIA ECONOMICA ===
+
+<CategoriaEconomicaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbcategoriaeconomica2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/categoria-economica/{\"numAnoExercicio\"}/{\"numCategoriaEconomica\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:CategoriaEconomica ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strCategoriaEconomica\"" ]
+    ].
+
+# === GRUPO DA DESPESA ===
+
+<GrupoDespesaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbgrupodespesa2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/grupo-despesa/{\"numCodigoGrupoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:GrupoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeGrupoDespesa\"" ]
+    ].
+    
+# === MODALIDADE DA APLICACAO ===
+    
+<ModalidadeAplicacaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbmodalidade2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/modalidade-aplicacao/{\"numCodigoModalidade\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:ModalidadeAplicacao ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strModalidade\"" ]
+    ].
+    
+# === ELEMENTO DA DESPESA ===
+
+
+<ElementoDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbelementodespesa2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/elemento-despesa/{\"numAnoExercicio\"}/{\"numCodigoElementoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:ElementoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeElementoDespesa\"" ]
+    ].
+
+# === SUBELEMENTO DA DESPESA ===
+
+<SubelementoDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbsubelementodespesa2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subelemento-despesa/{\"numCodigoSubelementoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:SubelementoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strDescricaoSubElementoDespesa\"" ]
+    ].
+
+# === EMPENHO ===
+
+<EmpenhoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.empenhado2015 AS empenho
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				empenho.numProcesso <> '' AND
+				empenho.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/empenho/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoEmpenho\"}" ;
+        rr:class 		loa:Empenho ;
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	time:year ;
+      	rr:objectMap    [ rr:column "\"NumAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	rdfs:comment ;
+      	rr:objectMap    [ rr:column "\"historicoDocumentoEmpenho\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"numValorEmpenho\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	time:inXSDDateTime ;
+      	rr:objectMap    [ rr:column "\"datEmpenhoDocumento\"" ]
+    ];
+    
+    # Credor
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:favorece ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <CredorDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumCpfCnpjNis\"" ;
+            	rr:parent "\"NumCpfCnpjNis\"" ;
+        	];
+    	];
+	];
+    
+    # Unidade Gestora
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:realizadoPor ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <UnidadeGestoraTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoUnidadeGestora\"" ;
+            	rr:parent "\"numCodigoUnidadeGestora\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Programa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaPrograma ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ProgramaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoPrograma\"" ;
+            	rr:parent "\"numCodigoPrograma\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Acao
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaAcao ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <AcaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoAcao\"" ;
+            	rr:parent "\"numCodigoAcao\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Subtitulo
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaSubtitulo ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <SubtituloTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoSubtitulo\"" ;
+            	rr:parent "\"numSubtitulo\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Funcao
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaFuncao ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <FuncaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoFuncao\"" ;
+            	rr:parent "\"numCodigoFuncao\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Subfuncao
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaSubfuncao ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <SubfuncaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoSubFuncao\"" ;
+            	rr:parent "\"numCodigoSubFuncao\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Fonte Recurso
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:mencionaFonteRecurso ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <FonteRecursoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoFonte\"" ;
+            	rr:parent "\"numFonteRecurso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Item Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:compostoDe ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ItemDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+    	];
+	].
+	
+# === ITEM DESPESA ===
+
+<ItemDespesaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.empenhado2015 AS empenho
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				empenho.numProcesso <> '' AND
+				empenho.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/item-despesa/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoEmpenho\"}" ;
+        rr:class 		loa:ItemDespesa ;
+    ];
+	
+	rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"numValorEmpenho\"" ]
+    ];
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:template "ITEM DESPESA {\"NumProcesso\"} {\"numDocumentoEmpenho\"}" ; rr:termType rr:Literal ; ]
+    ];
+	
+	# Categoria Economica
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	rdf:type ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <CategoriaEconomicaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCategoriaEconomica\"" ;
+            	rr:parent "\"numCategoriaEconomica\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Grupo Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	rdf:type ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <GrupoDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoGrupoDespesa\"" ;
+            	rr:parent "\"numCodigoGrupoDespesa\"" ;
+        	];
+    	];
+	];
+	
+	# Modalidade Aplicacao
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	rdf:type ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ModalidadeAplicacaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoModalidade\"" ;
+            	rr:parent "\"numCodigoModalidade\"" ;
+        	];
+    	];
+	];
+	
+	# Elemento Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	rdf:type ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ElementoDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoElementoDespesa\"" ;
+            	rr:parent "\"numCodigoElementoDespesa\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Subelemento Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	rdf:type ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <SubelementoDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoSubelementoDespesa\"" ;
+            	rr:parent "\"numCodigoSubelementoDespesa\"" ;
+        	];
+    	];
+	].
+	
+# === CREDOR ===
+
+<CredorDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.empenhado2015 AS empenho
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				empenho.numProcesso <> '' AND
+				empenho.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/credor/{\"NumCpfCnpjNis\"}" ;
+        rr:class 		loa:Credor ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"StrNomeFavorecido\"" ]
+    ].
+
+# === LIQUIDAÇÃO ===
+	
+<LiquidacaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.liquidado2015 AS liquidacao
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				liquidacao.numProcesso <> '' AND
+				liquidacao.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/item-despesa/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoLiquidacao\"}" ;
+        rr:class 		loa:Liquidacao ;
+    ];
+	
+	rr:predicateObjectMap [
+      	rr:predicate	time:year ;
+      	rr:objectMap    [ rr:column "\"NumAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	rdfs:comment ;
+      	rr:objectMap    [ rr:column "\"historicoDocumentoLiquidacao\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"numValorLiquidado\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	time:inXSDDateTime ;
+      	rr:objectMap    [ rr:column "\"datLiquidDocumento\"" ]
+    ];
+    
+    # Credor
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:quita ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <CredorDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumCpfCnpjNis\"" ;
+            	rr:parent "\"NumCpfCnpjNis\"" ;
+        	];
+    	];
+	];
+    
+    # Unidade Gestora
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:realizadoPor ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <UnidadeGestoraTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoUnidadeGestora\"" ;
+            	rr:parent "\"numCodigoUnidadeGestora\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Empenho
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:depende ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <EmpenhoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Item da Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:liquida ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ItemDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+    	];
+	].
+	
+# === PAGAMENTO ===
+	
+<PagamentoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.pagamento2015 AS pagamento
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				pagamento.numProcesso <> '' AND
+				pagamento.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/item-despesa/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numOrdemBancaria\"}" ;
+        rr:class 		loa:Pagamento ;
+    ];
+	
+	rr:predicateObjectMap [
+      	rr:predicate	time:year ;
+      	rr:objectMap    [ rr:column "\"NumAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	rdfs:comment ;
+      	rr:objectMap    [ rr:column "\"HistoricoDocumento\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"NumValorRepasse\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	time:inXSDDateTime ;
+      	rr:objectMap    [ rr:column "\"datEmissaoOrdemBancaria\"" ]
+    ];
+    
+    # Credor
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:favorece ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <CredorDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumCpfCnpjNis\"" ;
+            	rr:parent "\"NumCpfCnpjNis\"" ;
+        	];
+    	];
+	];
+    
+    # Unidade Gestora
+    
+    rr:predicateObjectMap [
+    	rr:predicate 	loa:realizadoPor ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <UnidadeGestoraTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumCodigoUnidadeGestora\"" ;
+            	rr:parent "\"numCodigoUnidadeGestora\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Liquidacao
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:depende ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <LiquidacaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+    	];
+	];
+	
+	# Item da Despesa
+	
+	rr:predicateObjectMap [
+    	rr:predicate 	loa:paga ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <ItemDespesaTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"NumProcesso\"" ;
+            	rr:parent "\"NumProcesso\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumDocumentoEmpenho\"" ;
+            	rr:parent "\"numDocumentoEmpenho\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"NumAnoExercicio\"" ;
+            	rr:parent "\"NumAnoExercicio\"" ;
+        	];
+    	];
+	].

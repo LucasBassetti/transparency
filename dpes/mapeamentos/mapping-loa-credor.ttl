@@ -1,0 +1,32 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loa: <http://ontology.com.br/loa/spec/#> .
+@base <http://localhost:3000/base/> .
+
+# === CREDOR ===
+
+<CredorDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.empenhado2015 AS empenho
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				empenho.NumProcesso <> '' AND
+				empenho.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/credor/{\"NumCpfCnpjNis\"}" ;
+        rr:class 		loa:Credor ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"StrNomeFavorecido\"" ]
+    ].

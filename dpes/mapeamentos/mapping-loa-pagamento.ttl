@@ -1,0 +1,75 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loa: <http://ontology.com.br/loa/spec/#> .
+@base <http://localhost:3000/base/> .
+
+# === PAGAMENTO ===
+	
+<PagamentoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.pagamento2015 AS pagamento
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				pagamento.NumProcesso <> '' AND
+				pagamento.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/pagamento/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numOrdemBancaria\"}" ;
+        rr:class 		loa:Pagamento ;
+    ];
+	
+	rr:predicateObjectMap [
+      	rr:predicate	time:year ;
+      	rr:objectMap    [ rr:column "\"NumAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	rdfs:comment ;
+      	rr:objectMap    [ rr:column "\"HistoricoDocumento\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"NumValorRepasse\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      	rr:predicate	time:inXSDDateTime ;
+      	rr:objectMap    [ rr:column "\"datEmissaoOrdemBancaria\"" ]
+    ];
+    
+    # Credor
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	loa:favorece ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/credor/{\"NumCpfCnpjNis\"}" ]
+    ];
+    
+    # Unidade Gestora
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	loa:realizadoPor ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/unidade-gestora/{\"NumAnoExercicio\"}/{\"numCodigoUnidadeGestora\"}" ]
+    ];
+	
+	# Empenho
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	loa:depende ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/empenho/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoEmpenho\"}" ]
+    ];
+	
+	# Item da Despesa
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	loa:paga ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/item-despesa/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoEmpenho\"}" ]
+    ].

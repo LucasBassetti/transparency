@@ -1,0 +1,340 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loa: <http://ontology.com.br/loa/spec/#> .
+@base <http://localhost:3000/base/> .
+
+# === ORGAO ===
+
+<OrgaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborgao2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/orgao/{\"numAnoExercicio\"}/{\"numCodigoOrgao\"}" ;
+        rr:class 		loa:Orgao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeOrgao\"" ]
+    ].
+
+# === UNIDADE GESTORA ===
+
+<UnidadeGestoraTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbunidadegestora2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/unidade-gestora/{\"numAnoExercicio\"}/{\"numCodigoUnidadeGestora\"}" ;
+        rr:class 		loa:UnidadeGestora ;
+        rr:class 		loa:UnidadeOrcamentaria ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeUnidadeGestora\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+    	rr:predicate rdfs:subClassOf ;
+    	rr:objectMap [
+        	rr:parentTriplesMap <OrgaoTriplesMap> ;
+        	rr:joinCondition [
+            	rr:child "\"numCodigoOrgao\"" ;
+            	rr:parent "\"numCodigoOrgao\"" ;
+        	];
+        	rr:joinCondition [
+            	rr:child "\"numAnoExercicio\"" ;
+            	rr:parent "\"numAnoExercicio\"" ;
+        	];
+    	];
+	].
+
+# === PROGRAMA ===
+
+<ProgramaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentoprogramasiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/programa/{\"numAnoExercicio\"}/{\"numCodigoPrograma\"}" ;
+        rr:class 		loa:Programa ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomePrograma\"" ]
+    ].
+    
+# === ACAO ===
+
+<AcaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentoacaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/acao/{\"numAnoExercicio\"}/{\"numCodigoAcao\"}" ;
+        rr:class 		loa:Acao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeAcao\"" ]
+    ].
+    
+# === SUBTITULO ===
+
+<SubtituloTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbsubtitulo2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subtitulo/{\"numAnoExercicio\"}/{\"numSubtitulo\"}" ;
+        rr:class 		loa:Subtitulo ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strSubtitulo\"" ]
+    ].
+    
+# === FUNCAO ===
+
+<FuncaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentofuncaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/funcao/{\"numAnoExercicio\"}/{\"numCodigoFuncao\"}" ;
+        rr:class 		loa:Funcao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeFuncao\"" ]
+    ].
+    
+# === SUBFUNCAO ===
+
+<SubfuncaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tborcamentosubfuncaosiafem2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subfuncao/{\"numAnoExercicio\"}/{\"numCodigoSubFuncao\"}" ;
+        rr:class 		loa:Subfuncao ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeSubFuncao\"" ]
+    ].
+
+# === FONTE DE RECURSO ===
+
+<FonteRecursoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbfontederecurso2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/fonte-recurso/{\"numFonteRecurso\"}" ;
+        rr:class 		loa:FonteRecurso ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strFonteRecurso\"" ]
+    ].
+
+# === CATEGORIA ECONOMICA ===
+
+<CategoriaEconomicaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbcategoriaeconomica2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/categoria-economica/{\"numAnoExercicio\"}/{\"numCategoriaEconomica\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:CategoriaEconomica ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strCategoriaEconomica\"" ]
+    ].
+
+# === GRUPO DA DESPESA ===
+
+<GrupoDespesaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbgrupodespesa2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/grupo-despesa/{\"numCodigoGrupoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:GrupoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeGrupoDespesa\"" ]
+    ].
+    
+# === MODALIDADE DA APLICACAO ===
+    
+<ModalidadeAplicacaoTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ rr:tableName "tbmodalidade2015" ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/modalidade-aplicacao/{\"numCodigoModalidade\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:ModalidadeAplicacao ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strModalidade\"" ]
+    ].
+    
+# === ELEMENTO DA DESPESA ===
+
+
+<ElementoDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbelementodespesa2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/elemento-despesa/{\"numAnoExercicio\"}/{\"numCodigoElementoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:ElementoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	time:year ;
+      rr:objectMap    	[ rr:column "\"numAnoExercicio\"" ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strNomeElementoDespesa\"" ]
+    ].
+
+# === SUBELEMENTO DA DESPESA ===
+
+<SubelementoDespesaTriplesMap>
+    a rr:TriplesMap;
+    
+    rr:logicalTable [ rr:tableName "tbsubelementodespesa2015" ];
+    
+    rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/subelemento-despesa/{\"numCodigoSubelementoDespesa\"}" ;
+        rr:class 		owl:Class ;
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:subClassOf ;
+      rr:objectMap    	[ rr:constant loa:ItemDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:constant loa:SubelementoDespesa ]
+    ];
+    
+    rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:column "\"strDescricaoSubElementoDespesa\"" ]
+    ].

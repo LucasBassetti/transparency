@@ -1,0 +1,72 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loa: <http://ontology.com.br/loa/spec/#> .
+@base <http://localhost:3000/base/> .
+
+# === ITEM DESPESA ===
+
+<ItemDespesaTriplesMap>
+	a rr:TriplesMap;
+	
+	rr:logicalTable [ 
+		rr:sqlQuery """
+    		SELECT * FROM dpes.empenhado2015 AS empenho
+			INNER JOIN dpes.tbsubelementodespesa2015 AS subelemento
+			WHERE 
+				empenho.NumProcesso <> '' AND
+				empenho.NumCodigoSubelementoDespesa = subelemento.numCodigoSubelementoDespesa
+    	"""
+    ];
+	
+	rr:subjectMap [ 
+    	rr:template 	"http://localhost:3000/loa/item-despesa/{\"NumAnoExercicio\"}/{\"NumProcesso\"}/{\"numDocumentoEmpenho\"}" ;
+        rr:class 		loa:ItemDespesa ;
+    ];
+	
+	rr:predicateObjectMap [
+      	rr:predicate	loa:valorTotal ;
+      	rr:objectMap    [ rr:column "\"numValorEmpenho\"" ]
+    ];
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdfs:label ;
+      rr:objectMap    	[ rr:template "ITEM DESPESA {\"NumProcesso\"} {\"numDocumentoEmpenho\"}" ; rr:termType rr:Literal ; ]
+    ];
+	
+	# Categoria Economica
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/categoria-economica/{\"NumAnoExercicio\"}/{\"NumCategoriaEconomica\"}" ]
+    ];
+	
+	# Grupo Despesa
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/grupo-despesa/{\"NumCodigoGrupoDespesa\"}" ]
+    ];
+	
+	# Modalidade Aplicacao
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/modalidade-aplicacao/{\"NumCodigoModalidade\"}" ]
+    ];
+	
+	# Elemento Despesa
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/elemento-despesa/{\"NumAnoExercicio\"}/{\"NumCodigoElementoDespesa\"}" ]
+    ];
+	
+	# Subelemento Despesa
+	
+	rr:predicateObjectMap [
+      rr:predicate	  	rdf:type ;
+      rr:objectMap    	[ rr:template "http://localhost:3000/loa/subelemento-despesa/{\"NumCodigoSubelementoDespesa\"}" ]
+    ].
