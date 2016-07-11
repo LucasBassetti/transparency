@@ -22,7 +22,6 @@
             unidadeGestora: base_uri + 'unidade-gestora/',
             credor: base_uri + 'credor/',
 
-            fonteRecurso: base_uri + 'fonte-recurso/',
             programa: base_uri + 'programa/',
             acao: base_uri + 'acao/',
             atividade: base_uri + 'acao/atividade/',
@@ -31,6 +30,10 @@
             subtitulo: base_uri + 'subtitulo/',
             funcao: base_uri + 'funcao/',
             subfuncao: base_uri + 'subfuncao/',
+
+            fonteRecurso: base_uri + 'fonte-recurso/',
+            esfera: base_uri + 'esfera/',
+            planoOrcamentario: base_uri + 'plano-orcamentario/',
 
             categoriaEconomica: base_uri + 'categoria-economica/',
             grupoDespesa: base_uri + 'grupo-despesa/',
@@ -49,7 +52,8 @@
             loa: 'http://ontology.com.br/loa/spec/#'
         };
 
-    conn.setEndpoint("http://localhost:5820");
+    // conn.setEndpoint("http://dev.nemo.inf.ufes.br:5820/");
+    conn.setEndpoint("http://dev.nemo.inf.ufes.br:5820/");
     conn.setCredentials("admin", "admin");
 
     // triplify empenhos
@@ -115,6 +119,10 @@
             acaoURI,
             subtituloURI,
 
+            fonteRecursoURI,
+            esferaURI,
+            planoOrcamentarioURI,
+
             unidadeGestoraURI,
             credorURI,
 
@@ -164,6 +172,10 @@
                 programaURI = uri.programa + date.getFullYear() + '/' + doc.programa.codigo;
                 acaoURI = uri.acao + date.getFullYear() + '/' + doc.acao.codigo;
                 subtituloURI = uri.subtitulo + date.getFullYear() + '/' + doc.subtitulo.codigo;
+
+                fonteRecursoURI = uri.fonteRecurso + date.getFullYear() + '/' + doc.fonteRecurso.codigo;
+                esferaURI = uri.esfera + date.getFullYear() + '/' + doc.esfera.codigo;
+                planoOrcamentarioURI = uri.planoOrcamentario + date.getFullYear() + '/' + doc.planoOrcamentario.codigo;
 
                 // uri:empenho rdf:type loa:Empenho
                 addTriple({
@@ -241,6 +253,27 @@
                     object: subtituloURI
                 }, 'URI');
 
+                // uri:empenho loa:fonteRecurso uri:fonteRecurso
+                addTriple({
+                    subject: subject,
+                    predicate: prefix.loa + 'fonteRecurso',
+                    object: fonteRecursoURI
+                }, 'URI');
+
+                // uri:empenho loa:esfera uri:esfera
+                addTriple({
+                    subject: subject,
+                    predicate: prefix.loa + 'esfera',
+                    object: esferaURI
+                }, 'URI');
+
+                // uri:empenho loa:planoOrcamentario uri:planoOrcamentario
+                addTriple({
+                    subject: subject,
+                    predicate: prefix.loa + 'planoOrcamentario',
+                    object: planoOrcamentarioURI
+                }, 'URI');
+
                 /* === FUNCAO === */
 
                 // uri:funcao rdf:type loa:Funcao
@@ -255,6 +288,13 @@
                     subject: funcaoURI,
                     predicate: prefix.rdfs + 'label',
                     object: doc.funcao.rotulo
+                }, 'Literal');
+
+                // uri:funcao loa:codigo "codigo"
+                addTriple({
+                    subject: funcaoURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.funcao.codigo
                 }, 'Literal');
 
                 /* === SUBFUNCAO === */
@@ -273,6 +313,13 @@
                     object: doc.subfuncao.rotulo
                 }, 'Literal');
 
+                // uri:subfuncao loa:codigo "codigo"
+                addTriple({
+                    subject: subfuncaoURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.subfuncao.codigo
+                }, 'Literal');
+
                 /* === PROGRAMA === */
 
                 // uri:programa rdf:type loa:Programa
@@ -287,6 +334,13 @@
                     subject: programaURI,
                     predicate: prefix.rdfs + 'label',
                     object: doc.programa.rotulo
+                }, 'Literal');
+
+                // uri:programa loa:codigo "codigo"
+                addTriple({
+                    subject: programaURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.programa.codigo
                 }, 'Literal');
 
                 /* === ACAO === */
@@ -305,6 +359,13 @@
                     object: doc.acao.rotulo
                 }, 'Literal');
 
+                // uri:acao loa:codigo "codigo"
+                addTriple({
+                    subject: acaoURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.acao.codigo
+                }, 'Literal');
+
                 /* === SUBTITULO === */
 
                 // uri:subtitulo rdf:type loa:Subtitulo
@@ -319,6 +380,82 @@
                     subject: subtituloURI,
                     predicate: prefix.rdfs + 'label',
                     object: doc.subtitulo.rotulo
+                }, 'Literal');
+
+                // uri:subtitulo loa:codigo "codigo"
+                addTriple({
+                    subject: subtituloURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.subtitulo.codigo
+                }, 'Literal');
+
+                /* === FONTE RECURSO === */
+
+                // uri:fonteRecurso rdf:type loa:FonteRecurso
+                addTriple({
+                    subject: fonteRecursoURI,
+                    predicate: prefix.rdf + 'type',
+                    object: prefix.loa + 'FonteRecurso'
+                }, 'URI');
+
+                // uri:fonteRecurso rdfs:label "rotulo"
+                addTriple({
+                    subject: fonteRecursoURI,
+                    predicate: prefix.rdfs + 'label',
+                    object: doc.fonteRecurso.rotulo
+                }, 'Literal');
+
+                // uri:fonteRecurso loa:codigo "codigo"
+                addTriple({
+                    subject: fonteRecursoURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.fonteRecurso.codigo
+                }, 'Literal');
+
+                /* === ESFERA === */
+
+                // uri:esfera rdf:type loa:Esfera
+                addTriple({
+                    subject: esferaURI,
+                    predicate: prefix.rdf + 'type',
+                    object: prefix.loa + 'Esfera'
+                }, 'URI');
+
+                // uri:esfera rdfs:label "rotulo"
+                addTriple({
+                    subject: esferaURI,
+                    predicate: prefix.rdfs + 'label',
+                    object: doc.esfera.rotulo
+                }, 'Literal');
+
+                // uri:esfera loa:codigo "codigo"
+                addTriple({
+                    subject: esferaURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.esfera.codigo
+                }, 'Literal');
+
+                /* === PLANO ORCAMENTARIO === */
+
+                // uri:planoOrcamentario rdf:type loa:PlanoOrcamentario
+                addTriple({
+                    subject: planoOrcamentarioURI,
+                    predicate: prefix.rdf + 'type',
+                    object: prefix.loa + 'PlanoOrcamentario'
+                }, 'URI');
+
+                // uri:planoOrcamentario rdfs:label "rotulo"
+                addTriple({
+                    subject: planoOrcamentarioURI,
+                    predicate: prefix.rdfs + 'label',
+                    object: doc.planoOrcamentario.rotulo
+                }, 'Literal');
+
+                // uri:planoOrcamentario loa:codigo "codigo"
+                addTriple({
+                    subject: planoOrcamentarioURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.planoOrcamentario.codigo
                 }, 'Literal');
             }
 
@@ -387,7 +524,7 @@
                 itemDespesa = doc.subitems[j];
                 subelementoDespesaURI = uri.subelementoDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo;
 
-                if(doc.fase === 'Empenho') {
+                if(doc.fase === 'Empenho' && itemDespesa.codigo.length > 0 && itemDespesa.codigo !== 'Não') {
 
                     itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
                     categoriaEconomicaURI = uri.categoriaEconomica  + date.getFullYear() + '/' + doc.classificacaoEconomica.codigo;
@@ -467,6 +604,13 @@
                         object: doc.classificacaoEconomica.rotulo
                     }, 'Literal');
 
+                    // uri:categoriaEconomica loa:codigo "codigo"
+                    addTriple({
+                        subject: categoriaEconomicaURI,
+                        predicate: prefix.loa + 'codigo',
+                        object: doc.classificacaoEconomica.codigo
+                    }, 'Literal');
+
                     /* === GRUPO DA DESPESA === */
 
                     // uri:itemDespesa rdf:type uri:grupoDespesa
@@ -504,6 +648,13 @@
                         object: doc.grupoDespesa.rotulo
                     }, 'Literal');
 
+                    // uri:grupoDespesa loa:codigo "codigo"
+                    addTriple({
+                        subject: grupoDespesaURI,
+                        predicate: prefix.loa + 'codigo',
+                        object: doc.grupoDespesa.codigo
+                    }, 'Literal');
+
                     /* === MODADLIDADE DE APLICACAO === */
 
                     // uri:itemDespesa rdf:type uri:modalidadeAplicacao
@@ -534,6 +685,13 @@
                         object: doc.modalidadeAplicacao.rotulo
                     }, 'Literal');
 
+                    // uri:modalidadeAplicacao loa:codigo "codigo"
+                    addTriple({
+                        subject: modalidadeAplicacaoURI,
+                        predicate: prefix.loa + 'codigo',
+                        object: doc.modalidadeAplicacao.codigo
+                    }, 'Literal');
+
                     /* === ELEMENTO DE DESPESA === */
 
                     // uri:itemDespesa rdf:type uri:elementoDespesaURI
@@ -557,11 +715,18 @@
                         object: prefix.loa + 'ItemDespesa'
                     }, 'URI');
 
-                    // uri:subelementoDespesa rdfs:label "rotulo"
+                    // uri:elementoDespesa rdfs:label "rotulo"
                     addTriple({
                         subject: elementoDespesaURI,
                         predicate: prefix.rdfs + 'label',
                         object: doc.elementoDespesa.rotulo
+                    }, 'Literal');
+
+                    // uri:elementoDespesa loa:codigo "codigo"
+                    addTriple({
+                        subject: elementoDespesaURI,
+                        predicate: prefix.loa + 'codigo',
+                        object: doc.elementoDespesa.codigo
                     }, 'Literal');
 
                     /* === SUBELEMENTO DE DESPESA === */
@@ -593,9 +758,16 @@
                         predicate: prefix.rdfs + 'label',
                         object: itemDespesa.rotulo
                     }, 'Literal');
+
+                    // uri:subelementoDespesa loa:codigo "codigo"
+                    addTriple({
+                        subject: subelementoDespesaURI,
+                        predicate: prefix.loa + 'codigo',
+                        object: itemDespesa.codigo
+                    }, 'Literal');
                 }
 
-                else if(doc.fase === 'Liquidação') {
+                else if(doc.fase === 'Liquidação' && itemDespesa.codigo.length > 0 && itemDespesa.codigo !== 'Não') {
 
                     itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
 
@@ -627,7 +799,7 @@
                         object: subelementoDespesaURI
                     }, 'URI');
                 }
-                else if(doc.fase === 'Pagamento') {
+                else if(doc.fase === 'Pagamento' && itemDespesa.codigo.length > 0 && itemDespesa.codigo !== 'Não') {
 
                     itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
 
