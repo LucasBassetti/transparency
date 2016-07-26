@@ -1,17 +1,23 @@
 var siop = require('./app/siop'),
     siaf = require('./app/siaf'),
-    arg = process.argv[2];
+    program = require('commander');
 
-if(arg === 'gsf') {
-    siop.generateSIOPFile();
-}
-else if(arg === 'msf') {
-    siaf.matchSIOPFile();
-}
-else {
-    console.log('\n============================\n');
-    console.log('Commands: \n');
-    console.log('[gsf] - generate siop file');
-    console.log('[msf] - match siop file');
-    console.log('\n============================\n');
-}
+program
+    .version('0.0.1');
+
+program
+    .command('integration')
+    .alias('it')
+    .description('Integrate SIOP files with SIAF triplestore')
+    .option('-g, --generateFiles', 'Generate SIOP files from SIOP endpoint')
+    .option('-m, --matchFiles', 'Match SIOP files with SIAF triplestore')
+    .action(function(options) {
+        if(options.generateFiles) {
+            siop.generateSIOPFile();
+        }
+        if(options.matchFiles) {
+            siaf.matchSIOPFile();
+        }
+    });
+
+program.parse(process.argv);

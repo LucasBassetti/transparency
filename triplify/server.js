@@ -10,6 +10,8 @@
         triples = [],
 
         uri = {
+            itemLoa: base_uri + 'item-loa/',
+
             empenho: base_uri + 'empenho/',
             itemDespesa: base_uri + 'item-despesa/',
             liquidacao: base_uri + 'liquidacao/',
@@ -113,6 +115,9 @@
         var date,
             subject,
 
+            itemLoaCodigo,
+            itemLoaURI,
+
             funcaoURI,
             subfuncaoURI,
             programaURI,
@@ -154,7 +159,7 @@
             unidadeGestoraURI = uri.unidadeGestora + date.getFullYear() + '/' + doc.unidadeGestora.codigo;
 
             if(doc.favorecido) {
-                credorURI = uri.credor + doc.favorecido.codigo;
+                credorURI = uri.credor + doc.favorecido.codigo.replace(/[^\w\s]/gi, '');
             }
             else {
                 credorURI = "";
@@ -167,6 +172,22 @@
             // Empenho - http://localhost:3000/loa/empenho/2016/{{codigo}}
             if(doc.fase === 'Empenho') {
 
+                itemLoaCodigo =   date.getFullYear() +
+                                  doc.esfera.codigo +
+                                  doc.programa.codigo +
+                                  doc.acao.codigo +
+                                  doc.subtitulo.codigo +
+                                  doc.funcao.codigo +
+                                  doc.subfuncao.codigo +
+                                  doc.fonteRecurso.codigo +
+                                  doc.planoOrcamentario.codigo +
+                                  doc.classificacaoEconomica.codigo +
+                                  doc.grupoDespesa.codigo +
+                                  doc.modalidadeAplicacao.codigo +
+                                  doc.elementoDespesa.codigo;
+
+                itemLoaURI = uri.itemLoa + date.getFullYear() + '/' + itemLoaCodigo;
+
                 funcaoURI = uri.funcao + date.getFullYear() + '/' + doc.funcao.codigo;
                 subfuncaoURI = uri.subfuncao + date.getFullYear() + '/' + doc.subfuncao.codigo;
                 programaURI = uri.programa + date.getFullYear() + '/' + doc.programa.codigo;
@@ -177,11 +198,23 @@
                 esferaURI = uri.esfera + date.getFullYear() + '/' + doc.esfera.codigo;
                 planoOrcamentarioURI = uri.planoOrcamentario + date.getFullYear() + '/' + doc.planoOrcamentario.codigo;
 
+                categoriaEconomicaURI = uri.categoriaEconomica  + date.getFullYear() + '/' + doc.classificacaoEconomica.codigo;
+                grupoDespesaURI = uri.grupoDespesa  + date.getFullYear() + '/' + doc.grupoDespesa.codigo;
+                modalidadeAplicacaoURI = uri.modalidadeAplicacao  + date.getFullYear() + '/' + doc.modalidadeAplicacao.codigo;
+                elementoDespesaURI = uri.elementoDespesa  + date.getFullYear() + '/' + doc.elementoDespesa.codigo;
+
                 // uri:empenho rdf:type loa:Empenho
                 addTriple({
                     subject: subject,
                     predicate: prefix.rdf + 'type', // rdf:type
                     object: prefix.loa + 'Empenho'  // loa:Empenho
+                }, 'URI');
+
+                // uri:empenho loa:conformidadeCom loa:ItemLoa
+                addTriple({
+                    subject: subject,
+                    predicate: prefix.loa + 'conformidadeCom',
+                    object: itemLoaURI
                 }, 'URI');
 
                 if(doc.especie === "Original") {
@@ -218,60 +251,97 @@
                     }, 'URI');
                 }
 
-                // uri:empenho loa:funcao uri:funcao
+                /* === ITEM LOA === */
+
+                // uri:itemLoa rdf:type loa:ItemLoa
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'funcao',
+                    subject: itemLoaURI,
+                    predicate: prefix.rdf + 'type',
+                    object: prefix.loa + "ItemLoa"
+                }, 'URI');
+
+                // uri:itemLoa rdfs:label "label"
+                addTriple({
+                    subject: itemLoaURI,
+                    predicate: prefix.rdfs + 'label',
+                    object: 'Item da LOA ' + itemLoaCodigo
+                }, 'Literal');
+
+                // uri:itemLoa loa:prescreve uri:funcao
+                addTriple({
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveFuncao',
                     object: funcaoURI
                 }, 'URI');
 
-                // uri:empenho loa:subfuncao uri:subfuncao
+                // uri:itemLoa loa:prescreve uri:subfuncao
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'subfuncao',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveSubfuncao',
                     object: subfuncaoURI
                 }, 'URI');
 
-                // uri:empenho loa:programa uri:programa
+                // uri:itemLoa loa:prescreve uri:programa
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'programa',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescrevePrograma',
                     object: programaURI
                 }, 'URI');
 
-                // uri:empenho loa:acao uri:acao
+                // uri:itemLoa loa:prescreve uri:acao
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'acao',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveAcao',
                     object: acaoURI
                 }, 'URI');
 
-                // uri:empenho loa:subtitulo uri:subtitulo
+                // uri:itemLoa loa:prescreve uri:subtitulo
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'subtitulo',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveSubtitulo',
                     object: subtituloURI
                 }, 'URI');
 
-                // uri:empenho loa:fonteRecurso uri:fonteRecurso
+                // uri:itemLoa loa:prescreve uri:fonteRecurso
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'fonteRecurso',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveFonteRecursos',
                     object: fonteRecursoURI
                 }, 'URI');
 
-                // uri:empenho loa:esfera uri:esfera
+                // uri:itemLoa loa:prescreve uri:esfera
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'esfera',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveEsfera',
                     object: esferaURI
                 }, 'URI');
 
-                // uri:empenho loa:planoOrcamentario uri:planoOrcamentario
+                // uri:itemLoa loa:prescreve uri:planoOrcamentario
                 addTriple({
-                    subject: subject,
-                    predicate: prefix.loa + 'planoOrcamentario',
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescrevePlanoOrcamentario',
                     object: planoOrcamentarioURI
+                }, 'URI');
+
+                // uri:itemLoa loa:prescreve uri:categoriaEconomica
+                addTriple({
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveCategoriaEconomica',
+                    object: categoriaEconomicaURI
+                }, 'URI');
+
+                // uri:itemLoa loa:prescreve uri:grupoDespesa
+                addTriple({
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveGrupoDespesa',
+                    object: grupoDespesaURI
+                }, 'URI');
+
+                // uri:itemLoa loa:prescreve uri:modalidadeAplicacao
+                addTriple({
+                    subject: itemLoaURI,
+                    predicate: prefix.loa + 'prescreveModalidadeAplicacao',
+                    object: modalidadeAplicacaoURI
                 }, 'URI');
 
                 /* === FUNCAO === */
@@ -391,11 +461,11 @@
 
                 /* === FONTE RECURSO === */
 
-                // uri:fonteRecurso rdf:type loa:FonteRecurso
+                // uri:fonteRecurso rdf:type loa:FonteRecursos
                 addTriple({
                     subject: fonteRecursoURI,
                     predicate: prefix.rdf + 'type',
-                    object: prefix.loa + 'FonteRecurso'
+                    object: prefix.loa + 'FonteRecursos'
                 }, 'URI');
 
                 // uri:fonteRecurso rdfs:label "rotulo"
@@ -527,10 +597,6 @@
                 if(doc.fase === 'Empenho' && itemDespesa.codigo.length > 0 && itemDespesa.codigo !== 'Não') {
 
                     itemDespesaURI = uri.itemDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemDespesa.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + i;
-                    categoriaEconomicaURI = uri.categoriaEconomica  + date.getFullYear() + '/' + doc.classificacaoEconomica.codigo;
-                    grupoDespesaURI = uri.grupoDespesa  + date.getFullYear() + '/' + doc.grupoDespesa.codigo;
-                    modalidadeAplicacaoURI = uri.modalidadeAplicacao  + date.getFullYear() + '/' + doc.modalidadeAplicacao.codigo;
-                    elementoDespesaURI = uri.elementoDespesa  + date.getFullYear() + '/' + doc.elementoDespesa.codigo;
 
                     // uri:empenho loa:compostoDe uri:itemDespesa
                     addTriple({
@@ -875,6 +941,13 @@
                     subject: credorURI,
                     predicate: prefix.rdfs + 'label',
                     object: doc.favorecido.rotulo,
+                }, 'Literal');
+
+                // uri:credor loa:codigo "codigo"
+                addTriple({
+                    subject: credorURI,
+                    predicate: prefix.loa + 'codigo',
+                    object: doc.favorecido.codigo.replace(/[^\w\s]/gi, ''),
                 }, 'Literal');
             }
 
