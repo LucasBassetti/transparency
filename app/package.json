@@ -5,10 +5,15 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "amazeui-touch": "^1.0.0-rc.2",
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.2.1",
+    "react-addons-css-transition-group": "^15.3.0",
     "react-addons-pure-render-mixin": "^15.2.1",
+    "react-addons-transition-group": "^15.3.0",
     "react-dom": "^15.2.1",
-    "react-mounter": "^1.2.0"
+    "react-mounter": "^1.2.0",
+    "react-router": "^2.6.1",
+    "react-router-transition": "0.0.5"
   }
 }

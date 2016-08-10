@@ -11,7 +11,6 @@ module.exports = {
     matchSIOPFile: function() {
 
         var data = JSON.parse(fs.readFileSync('output/siop.json', 'utf8')),
-            itemLoaPrefix = 'http://localhost:3000/loa/item-loa/',
             comment,
             commentTemplate = "http://www1.siop.planejamento.gov.br/sparql/?default-graph-uri=&query=SELECT+*+WHERE+%7B%0D%0A+++%3Chttp%3A%2F%2Forcamento.dados.gov.br%2Fid%2F2016%2FItemDespesa%2F{{CodigoItem}}%3E+%3Fp+%3Fo+.%0D%0A+++OPTIONAL+%7B+%3Fo+rdfs%3Alabel+%3Flabel+%7D%0D%0A%7D&format=text%2Fhtml&timeout=0&debug=on",
             queries = [],

@@ -5,7 +5,7 @@
         stardog = require('stardog');
 
     var conn = new stardog.Connection(),
-    	base_uri = "http://localhost:3000/loa/",
+    	base_uri = "http://ontology.com.br/loa/resource/",
         documents, doc, docNumber, docPath,
         triples = [],
 
@@ -183,8 +183,7 @@
                                   doc.planoOrcamentario.codigo +
                                   doc.classificacaoEconomica.codigo +
                                   doc.grupoDespesa.codigo +
-                                  doc.modalidadeAplicacao.codigo +
-                                  doc.elementoDespesa.codigo;
+                                  doc.modalidadeAplicacao.codigo;
 
                 itemLoaURI = uri.itemLoa + date.getFullYear() + '/' + itemLoaCodigo;
 
@@ -890,7 +889,14 @@
                         object: "ITEM PAGAMENTO " + itemDespesa.rotulo
                     }, 'Literal');
 
-                    // uri:pagamento loa:paga uri:subelementoDespesa
+                    // uri:itemPagamento loa:valorTotal "valorTotal"
+                    addTriple({
+                        subject: itemPagamentoURI,
+                        predicate: prefix.loa + 'valorTotal',
+                        object: itemDespesa.valor
+                    }, 'Literal');
+
+                    // uri:itemPagamento loa:paga uri:subelementoDespesa
                     addTriple({
                         subject: itemPagamentoURI,
                         predicate: prefix.loa + 'paga',

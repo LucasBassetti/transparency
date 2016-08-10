@@ -42,8 +42,7 @@ export default CredorContainer = React.createClass({
                     <a href="/" className="back">&#10094;</a>
                     <h2>Detalhes do Credor</h2>
                 </header>
-
-                {this.renderCredores()}                
+                {this.renderCredores()}
             </div>
         );
     }
