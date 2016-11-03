@@ -20,13 +20,13 @@ module.exports = {
 
             item = data[key];
 
-            if(_isItemLOA(item)) {
+            if(_isAutorizacaoDespesa(item)) {
 
                 comment = commentTemplate.replace('{{CodigoItem}}', item.codigo);
 
                 query = 'insert {'
-                + ' ?itemLoa owl:sameAs <' + item.uri + '> .'
-                + ' ?itemLoa rdfs:comment "' + comment + '" .'
+                + ' ?autorizacaoDespesa owl:sameAs <' + item.uri + '> .'
+                + ' ?autorizacaoDespesa rdfs:comment "' + comment + '" .'
                 + ' } where { ';
 
                 for(var i = 0, len = item.propriedades.length; i < len; i++) {
@@ -44,7 +44,7 @@ module.exports = {
                         }
 
                         if(element.type === 'relation') {
-                            query += ' ?itemLoa ' + element.value + '/loa:codigo \"' + prop.codigo + '\" .';
+                            query += ' ?autorizacaoDespesa ' + element.value + '/loa:codigo \"' + prop.codigo + '\" .';
                         }
                         // else {
                         //     query += ' ?item rdf:type/loa:codigo \"' + prop.codigo + '\" .';
@@ -72,21 +72,21 @@ module.exports = {
             })(i);
         }
 
-        function _isItemLOA(item) {
+        function _isAutorizacaoDespesa(item) {
 
-            var prop, isItemLOA = false;
+            var prop, isAutorizacaoDespesa = false;
 
             if(item.valorLeiMaisCredito !== '0' || item.valorDotacaoInicial !== '0' || item.valorProjetoLei !== '0') {
                 for(var i = 0, len = item.propriedades.length; i < len; i++) {
                     prop = item.propriedades[i];
 
                     if(prop.predicado === 'temElementoDespesa' && prop.codigo === '00') {
-                        isItemLOA = true;
+                        isAutorizacaoDespesa = true;
                     }
                 }
             }
 
-            return isItemLOA;
+            return isAutorizacaoDespesa;
         }
     }
 }
