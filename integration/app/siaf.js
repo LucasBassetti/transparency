@@ -14,7 +14,7 @@ module.exports = {
             comment,
             commentTemplate = "http://www1.siop.planejamento.gov.br/sparql/?default-graph-uri=&query=SELECT+*+WHERE+%7B%0D%0A+++%3Chttp%3A%2F%2Forcamento.dados.gov.br%2Fid%2F2016%2FItemDespesa%2F{{CodigoItem}}%3E+%3Fp+%3Fo+.%0D%0A+++OPTIONAL+%7B+%3Fo+rdfs%3Alabel+%3Flabel+%7D%0D%0A%7D&format=text%2Fhtml&timeout=0&debug=on",
             queries = [],
-            query, item, prop, element, classe;
+            query, insertClause, whereClause, item, prop, element, classe;
 
         for(var key in data) {
 
@@ -22,12 +22,15 @@ module.exports = {
 
             if(_isAutorizacaoDespesa(item)) {
 
-                comment = commentTemplate.replace('{{CodigoItem}}', item.codigo);
+                comment = commentTemplate.replace('{{CodigoItem}}', item.codigo),
 
-                query = 'insert {'
-                + ' ?autorizacaoDespesa owl:sameAs <' + item.uri + '> .'
-                + ' ?autorizacaoDespesa rdfs:comment "' + comment + '" .'
-                + ' } where { ';
+                insertClause = ' ?autorizacaoDespesa owl:sameAs <' + item.uri + '> .'
+                             + ' ?autorizacaoDespesa rdfs:comment "' + comment + '" .'
+                             + ' ?autorizacaoDespesa loa:valorLeiMaisCredito "' + item.valorLeiMaisCredito + '" .'
+                             + ' ?autorizacaoDespesa loa:valorDotacaoInicial "' + item.valorDotacaoInicial + '" .'
+                             + ' ?autorizacaoDespesa loa:valorProjetoLei "' + item.valorProjetoLei + '" .',
+
+                whereClause = "";
 
                 for(var i = 0, len = item.propriedades.length; i < len; i++) {
                     prop = item.propriedades[i];
@@ -44,7 +47,7 @@ module.exports = {
                         }
 
                         if(element.type === 'relation') {
-                            query += ' ?autorizacaoDespesa ' + element.value + '/loa:codigo \"' + prop.codigo + '\" .';
+                            whereClause += ' ?autorizacaoDespesa ' + element.value + '/loa:codigo \"' + prop.codigo + '\" .';
                         }
                         // else {
                         //     query += ' ?item rdf:type/loa:codigo \"' + prop.codigo + '\" .';
@@ -52,24 +55,35 @@ module.exports = {
                     }
                 }
 
-                query += '}';
+                query = 'insert {'
+                + insertClause
+                + ' } where { '
+                + whereClause
+                + ' }';
 
                 queries.push(query);
             }
         }
 
-        for(var i = 0, len = queries.length; i < len; i++) {
+        runQueries(queries);
 
-            (function(index) {
-                setTimeout(function() {
-                    siaf.query({
-                            database: "dpf",
-                            query: queries[index],
-                        }, function (data) {
-                            console.log(data);
-                    });
-                }, 100);
-            })(i);
+        function runQueries(queries) {
+
+            if(queries.length > 0) {
+                siaf.query({
+                        database: "dpf",
+                        query: queries[0],
+                    }, function (data) {
+                        console.log(data);
+                        queries.splice(0, 1);
+                        setTimeout(function() {
+                            runQueries(queries);
+                        }, 1000);
+                });
+            }
+            else {
+                return false;
+            }
         }
 
         function _isAutorizacaoDespesa(item) {
@@ -77,6 +91,7 @@ module.exports = {
             var prop, isAutorizacaoDespesa = false;
 
             if(item.valorLeiMaisCredito !== '0' || item.valorDotacaoInicial !== '0' || item.valorProjetoLei !== '0') {
+
                 for(var i = 0, len = item.propriedades.length; i < len; i++) {
                     prop = item.propriedades[i];
 

@@ -10,7 +10,7 @@
         triples = [],
 
         uri = {
-            autorizacaoDespesa: base_uri + 'item-loa/',
+            autorizacaoDespesa: base_uri + 'autorizacao-despesa/',
 
             empenho: base_uri + 'empenho/',
             itemEmpenho: base_uri + 'item-empenho/',
@@ -58,56 +58,20 @@
     conn.setEndpoint("http://dev.nemo.inf.ufes.br:5820/");
     conn.setCredentials("admin", "admin");
 
-    // triplify empenhos
-    for(var i = 0; i <= 24; i++) {
+    var dir = './files/';
 
-        if(i < 10) {
-            docNumber = "0" + i;
-        }
-        else {
-            docNumber = i;
-        }
+    fs.readdir(dir, function(err, files) {
+        files.forEach(function(file) {
+            if(file.indexOf('.json') >= 0) {
+                // console.log(file);
+                documents = JSON.parse(fs.readFileSync(dir + file, 'utf8'));
+                triplifyData(documents);
+            }
+        });
 
-        docPath = './files/empenhos/empUFES_Jan2016_' + docNumber + '.json';
-
-        documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
-        triplifyData(documents);
-    }
-
-    // triplify liquidacoes
-    for(var i = 0; i <= 21; i++) {
-
-        if(i < 10) {
-            docNumber = "0" + i;
-        }
-        else {
-            docNumber = i;
-        }
-
-        docPath = './files/liquidacoes/liqUFES_Jan2016_' + docNumber + '.json';
-
-        documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
-        triplifyData(documents);
-    }
-
-    // triplify pagamentos
-    for(var i = 0; i <= 25; i++) {
-
-        if(i < 10) {
-            docNumber = "0" + i;
-        }
-        else {
-            docNumber = i;
-        }
-
-        docPath = './files/pagamentos/pagUFES_Jan2016_' + docNumber + '.json';
-
-        documents = JSON.parse(fs.readFileSync(docPath, 'utf8'));
-        triplifyData(documents);
-    }
-
-    // insert data
-    insertData();
+        // insert data
+        insertData();
+    });
 
     // triplify documents
     function triplifyData(documents) {
@@ -131,7 +95,7 @@
             unidadeGestoraURI,
             credorURI,
 
-            itemEmpenho,
+            itemExecucao,
             itemEmpenhoURI,
             itemLiquidacaoURI,
             itemPagamentoURI,
@@ -165,6 +129,13 @@
                 credorURI = "";
             }
 
+            // [emp, liq, pag] owl:sameAs url
+            addTriple({
+                subject: subject,
+                predicate: prefix.owl + 'sameAs',
+                object: doc.url
+            }, 'URI');
+
             /*
              EMPENHO, LIQUIDACAO E PAGAMENTO
              ================================================================ */
@@ -172,7 +143,7 @@
             // Empenho - http://localhost:3000/loa/empenho/2016/{{codigo}}
             if(doc.fase === 'Empenho') {
 
-                autorizacaoDespesaCodigo =   date.getFullYear() +
+                autorizacaoDespesaCodigo = date.getFullYear() +
                                   doc.esfera.codigo +
                                   doc.programa.codigo +
                                   doc.acao.codigo +
@@ -209,10 +180,10 @@
                     object: prefix.loa + 'Empenho'  // loa:Empenho
                 }, 'URI');
 
-                // uri:empenho loa:conformidadeCom loa:AutorizacaoDespesa
+                // uri:empenho loa:refereSe loa:AutorizacaoDespesa
                 addTriple({
                     subject: subject,
-                    predicate: prefix.loa + 'conformidadeCom',
+                    predicate: prefix.loa + 'refereSe',
                     object: autorizacaoDespesaURI
                 }, 'URI');
 
@@ -590,12 +561,12 @@
 
             for(var j = 0, slen = doc.subitems.length; j < slen; j++) {
 
-                itemEmpenho = doc.subitems[j];
-                subelementoDespesaURI = uri.subelementoDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemEmpenho.codigo;
+                itemExecucao = doc.subitems[j];
+                subelementoDespesaURI = uri.subelementoDespesa + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemExecucao.codigo;
 
-                if(doc.fase === 'Empenho' && itemEmpenho.codigo.length > 0 && itemEmpenho.codigo !== 'Não') {
+                if(doc.fase === 'Empenho' && itemExecucao.codigo.length > 0 && itemExecucao.codigo !== 'Não') {
 
-                    itemEmpenhoURI = uri.itemEmpenho + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemEmpenho.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1) ;
+                    itemEmpenhoURI = uri.itemEmpenho + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemExecucao.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1) ;
 
                     // uri:empenho loa:compostoDe uri:itemEmpenho
                     addTriple({
@@ -608,35 +579,35 @@
                     addTriple({
                         subject: itemEmpenhoURI,
                         predicate: prefix.rdfs + 'label',
-                        object: "ITEM " + itemEmpenho.rotulo
+                        object: "ITEM " + itemExecucao.rotulo
                     }, 'Literal');
 
                     // uri:itemEmpenho loa:quantidade "quantidade"
                     addTriple({
                         subject: itemEmpenhoURI,
                         predicate: prefix.loa + 'quantidade',
-                        object: itemEmpenho.quantidade
+                        object: itemExecucao.quantidade
                     }, 'Literal');
 
                     // uri:itemEmpenho loa:valorUnitario "valor unitario"
-                    addTriple({
-                        subject: itemEmpenhoURI,
-                        predicate: prefix.loa + 'valorUnitario',
-                        object: itemEmpenho.valorUnitario
-                    }, 'Literal');
+                    // addTriple({
+                    //     subject: itemEmpenhoURI,
+                    //     predicate: prefix.loa + 'valorUnitario',
+                    //     object: itemExecucao.valorUnitario
+                    // }, 'Literal');
 
                     // uri:itemEmpenho loa:valorTotal "valor total"
                     addTriple({
                         subject: itemEmpenhoURI,
                         predicate: prefix.loa + 'valorTotal',
-                        object: itemEmpenho.valorTotal.replace('R$ ', '')
+                        object: itemExecucao.valor.replace('R$ ', '')
                     }, 'Literal');
 
                     // uri:itemEmpenho rdfs:comment "descricao"
                     addTriple({
                         subject: itemEmpenhoURI,
                         predicate: prefix.rdfs + 'comment',
-                        object: itemEmpenho.descricao.replace(/[^a-zA-Z ]/g, "")
+                        object: itemExecucao.descricao.replace(/[^a-zA-Z ]/g, "")
                     }, 'Literal');
 
                     /* === CATEGORIA ECONOMICA === */
@@ -821,20 +792,20 @@
                     addTriple({
                         subject: subelementoDespesaURI,
                         predicate: prefix.rdfs + 'label',
-                        object: itemEmpenho.rotulo
+                        object: itemExecucao.rotulo
                     }, 'Literal');
 
                     // uri:subelementoDespesa loa:codigo "codigo"
                     addTriple({
                         subject: subelementoDespesaURI,
                         predicate: prefix.loa + 'codigo',
-                        object: itemEmpenho.codigo
+                        object: itemExecucao.codigo
                     }, 'Literal');
                 }
 
-                else if(doc.fase === 'Liquidação' && itemEmpenho.codigo.length > 0 && itemEmpenho.codigo !== 'Não') {
+                else if(doc.fase === 'Liquidação' && itemExecucao.codigo.length > 0 && itemExecucao.codigo !== 'Não') {
 
-                    itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemEmpenho.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1);
+                    itemLiquidacaoURI = uri.itemLiquidacao + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemExecucao.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1);
 
                     // uri:itemLiquidacao rdf:type loa:ItemLiquidacao
                     addTriple({
@@ -854,7 +825,14 @@
                     addTriple({
                         subject: itemLiquidacaoURI,
                         predicate: prefix.rdfs + 'label',
-                        object: "ITEM LIQUIDACAO " + itemEmpenho.rotulo
+                        object: "ITEM LIQUIDACAO " + itemExecucao.rotulo
+                    }, 'Literal');
+
+                    // uri:itemLiquidacao loa:valorTotal "valorTotal"
+                    addTriple({
+                        subject: itemLiquidacaoURI,
+                        predicate: prefix.loa + 'valorTotal',
+                        object: itemExecucao.valor
                     }, 'Literal');
 
                     // uri:itemLiquidacaoURI loa:liquida uri:subelementoDespesa
@@ -864,9 +842,9 @@
                         object: subelementoDespesaURI
                     }, 'URI');
                 }
-                else if(doc.fase === 'Pagamento' && itemEmpenho.codigo.length > 0 && itemEmpenho.codigo !== 'Não') {
+                else if(doc.fase === 'Pagamento' && itemExecucao.codigo.length > 0 && itemExecucao.codigo !== 'Não') {
 
-                    itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemEmpenho.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1);
+                    itemPagamentoURI = uri.itemPagamento + date.getFullYear() + '/' + doc.elementoDespesa.codigo + '/' + itemExecucao.codigo + '/' + doc.unidadeGestora.codigo + doc.gestao.codigo + doc.documento + '/' + (Math.floor(Math.random() * 10000000) + 1);
 
                     // uri:itemPagamento rdf:type loa:ItemPagamento
                     addTriple({
@@ -886,14 +864,14 @@
                     addTriple({
                         subject: itemPagamentoURI,
                         predicate: prefix.rdfs + 'label',
-                        object: "ITEM PAGAMENTO " + itemEmpenho.rotulo
+                        object: "ITEM PAGAMENTO " + itemExecucao.rotulo
                     }, 'Literal');
 
                     // uri:itemPagamento loa:valorTotal "valorTotal"
                     addTriple({
                         subject: itemPagamentoURI,
                         predicate: prefix.loa + 'valorTotal',
-                        object: itemEmpenho.valor
+                        object: itemExecucao.valor
                     }, 'Literal');
 
                     // uri:itemPagamento loa:paga uri:subelementoDespesa
@@ -1084,6 +1062,8 @@
     // insert data
     function insertData() {
 
+        console.log(triples.length);
+
         var query = "INSERT DATA { ";
 
         for(var i = 0, len = triples.length; i < len; i++) {
@@ -1091,8 +1071,6 @@
         }
 
         query += '}';
-
-        // console.log(query);
 
         // execute query
     	conn.query({
