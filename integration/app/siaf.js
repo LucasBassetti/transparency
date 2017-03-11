@@ -10,11 +10,25 @@ module.exports = {
 
     matchSIOPFile: function() {
 
+        var enteFederativoURI = '<http://ontology.com.br/odp/resource/ente-federativo/uniao>';
+        var loaURI = '<http://ontology.com.br/odp/resource/loa/2016>';
+
         var data = JSON.parse(fs.readFileSync('output/siop.json', 'utf8')),
             comment,
             commentTemplate = "http://www1.siop.planejamento.gov.br/sparql/?default-graph-uri=&query=SELECT+*+WHERE+%7B%0D%0A+++%3Chttp%3A%2F%2Forcamento.dados.gov.br%2Fid%2F2016%2FItemDespesa%2F{{CodigoItem}}%3E+%3Fp+%3Fo+.%0D%0A+++OPTIONAL+%7B+%3Fo+rdfs%3Alabel+%3Flabel+%7D%0D%0A%7D&format=text%2Fhtml&timeout=0&debug=on",
             queries = [],
             query, insertClause, whereClause, item, prop, element, classe;
+
+        var initialQuery = 'INSERT { '
+          + enteFederativoURI + ' rdf:type odp:EnteFederativo . '
+          + enteFederativoURI + ' rdfs:label "União" . '
+          + loaURI + ' rdf:type odp:LeiOrcamentariaAnual . '
+          + loaURI + ' rdfs:label "LOA 2016" . '
+          + loaURI + ' odp:anoExercicio "2016" . '
+          + enteFederativoURI + ' odp:cria ' + loaURI + ' . '
+          + '} WHERE {}';
+
+        queries.push(initialQuery);
 
         for(var key in data) {
 
@@ -26,9 +40,11 @@ module.exports = {
 
                 insertClause = ' ?autorizacaoDespesa owl:sameAs <' + item.uri + '> .'
                              + ' ?autorizacaoDespesa rdfs:comment "' + comment + '" .'
-                             + ' ?autorizacaoDespesa loa:valorLeiMaisCredito "' + item.valorLeiMaisCredito + '" .'
-                             + ' ?autorizacaoDespesa loa:valorDotacaoInicial "' + item.valorDotacaoInicial + '" .'
-                             + ' ?autorizacaoDespesa loa:valorProjetoLei "' + item.valorProjetoLei + '" .',
+                             + ' ?autorizacaoDespesa odp:valorLeiMaisCredito "' + item.valorLeiMaisCredito + '" .'
+                             + ' ?autorizacaoDespesa odp:valorDotacaoInicial "' + item.valorDotacaoInicial + '" .'
+                             + ' ?autorizacaoDespesa odp:valorProjetoLei "' + item.valorProjetoLei + '" .'
+                             + ' ' + enteFederativoURI + ' odp:concede ?autorizacaoDespesa .'
+                             + ' ' + loaURI + ' odp:descreve ?autorizacaoDespesa .',
 
                 whereClause = "";
 
@@ -47,10 +63,10 @@ module.exports = {
                         }
 
                         if(element.type === 'relation') {
-                            whereClause += ' ?autorizacaoDespesa ' + element.value + '/loa:codigo \"' + prop.codigo + '\" .';
+                            whereClause += ' ?autorizacaoDespesa ' + element.value + '/odp:codigo \"' + prop.codigo + '\" .';
                         }
                         // else {
-                        //     query += ' ?item rdf:type/loa:codigo \"' + prop.codigo + '\" .';
+                        //     query += ' ?item rdf:type/odp:codigo \"' + prop.codigo + '\" .';
                         // }
                     }
                 }
@@ -71,10 +87,12 @@ module.exports = {
 
             if(queries.length > 0) {
                 siaf.query({
-                        database: "dpf",
+                        database: "odp",
                         query: queries[0],
                     }, function (data) {
-                        console.log(data);
+                        if(data.boolean) {
+                            console.log('Triplas inseridas. Faltam: ' + queries.length);
+                        }
                         queries.splice(0, 1);
                         setTimeout(function() {
                             runQueries(queries);
